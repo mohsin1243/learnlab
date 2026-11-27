@@ -60,4 +60,4 @@ The owner approves amendments, which use semantic versioning. Each build brief m
 | 1.0.0 | 2026-11-27 | GitHub Copilot | Initial version |
 | 1.1.0 | 2026-11-27 | GitHub Copilot | Principle I now allows the user's own private Codespace host |
 | 1.2.0 | 2026-11-27 | GitHub Copilot | Public Codespaces port allowed with the sandboxed Java runner |
-| 1.3.0 | 2026-11-27 | GitHub Copilot | Replaced the Stellantis branding with LearnLab's own identity |
+| 1.3.0 | 2026-11-27 | GitHub Copilot | Adopted LearnLab's own visual identity (logo, palette, typeface) |

@@ -53,6 +53,35 @@ def test_outputs_match_ignores_trailing_whitespace():
     assert not outputs_match("a", "b")
 
 
+def test_sandbox_hides_secret_environment(monkeypatch, tmp_path):
+    monkeypatch.setenv("GITHUB_TOKEN", "ghp_should_not_leak")
+    res = run_java('show(String.valueOf(System.getenv("GITHUB_TOKEN")));')
+    assert "ghp_should_not_leak" not in res.stdout + res.stderr
+    assert "GITHUB_TOKEN" not in {k.upper() for k in java_runner._sandbox_env(str(tmp_path))}
+
+
+def test_sandbox_blocks_file_access(tmp_path):
+    secret = tmp_path / "secret.txt"
+    secret.write_text("top secret")
+    path = str(secret).replace("\\", "\\\\")
+    res = run_java(f'show(java.nio.file.Files.readString(java.nio.file.Path.of("{path}")));')
+    assert res.error == "runtime" and "AccessControlException" in res.stderr
+    assert "top secret" not in res.stdout
+
+
+def test_sandbox_blocks_network_and_process_exec():
+    net = run_java('new java.net.Socket("example.com", 80);')
+    assert net.error == "runtime" and "AccessControlException" in net.stderr
+    proc = run_java('new ProcessBuilder("whoami").start();')
+    assert proc.error == "runtime" and "AccessControlException" in proc.stderr
+
+
+def test_sandbox_still_formats_and_has_clean_stderr():
+    res = run_java('show(1234.5); show(Map.of("b", 2, "a", 1));')
+    assert res.error is None and res.stdout.splitlines() == ["1234.50", "{a=1, b=2}"]
+    assert "Security Manager" not in res.stderr
+
+
 def test_missing_jdk_raises(monkeypatch):
     monkeypatch.setattr(java_runner, "java_executable", lambda name="java": None)
     with pytest.raises(JavaUnavailable):

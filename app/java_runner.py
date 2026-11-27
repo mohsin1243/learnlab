@@ -95,10 +95,10 @@ def _read_capped(stream, sink: list[str], cap: int, overflow: threading.Event, p
             break
 
 
-def _run_process(cmd: list[str], cwd: str, timeout_s: float, max_output: int):
+def _run_process(cmd: list[str], cwd: str, timeout_s: float, max_output: int, env: dict[str, str] | None = None):
     proc = subprocess.Popen(
         cmd, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        text=True, encoding="utf-8", errors="replace",
+        text=True, encoding="utf-8", errors="replace", env=env,
     )
     out: list[str] = []
     err: list[str] = []
@@ -121,26 +121,53 @@ def _run_process(cmd: list[str], cwd: str, timeout_s: float, max_output: int):
     return proc.returncode, "".join(out), "".join(err), timed_out, overflow.is_set()
 
 
+def _sandbox_env(tmp: str) -> dict[str, str]:
+    """Minimal environment for user code: no tokens or other secrets from the parent."""
+    keep = ("PATH", "SYSTEMROOT", "WINDIR", "LANG", "LC_ALL")
+    env = {k: v for k, v in os.environ.items() if k.upper() in keep}
+    env.update(HOME=tmp, TMP=tmp, TEMP=tmp, TMPDIR=tmp)
+    return env
+
+
+_POLICY = "grant {\n" + "".join(
+    f'    permission java.util.PropertyPermission "{p}", "read";\n'
+    for p in ("java.version", "java.vendor", "os.name", "file.separator", "path.separator", "line.separator")
+) + "};\n"
+_SM_WARNING = re.compile(r"^WARNING: .*Security Manager.*\r?\n?", re.MULTILINE)
+
+
 def run_java(code: str, timeout_s: float = 10.0, max_output: int = 64_000) -> JavaResult:
-    java = java_executable()
-    if not java:
+    java, javac = java_executable(), java_executable("javac")
+    if not (java and javac):
         raise JavaUnavailable("JDK not found. Run run.ps1 or set LEARNLAB_JAVA_HOME.")
     start = time.perf_counter()
     source = build_source(code)
     offset = 0 if source == code else _prefix().count("\n")
+    res = JavaResult()
     with tempfile.TemporaryDirectory(prefix="learnlab-") as tmp:
+        env = _sandbox_env(tmp)
         Path(tmp, "Main.java").write_text(source, encoding="utf-8")
+        policy = Path(tmp, "sandbox.policy")
+        policy.write_text(_POLICY, encoding="utf-8")
         rc, out, err, timed_out, overflow = _run_process(
-            [java, *JVM_FLAGS, "Main.java"], tmp, timeout_s, max_output)
-    res = JavaResult(stdout=out, stderr=_remap_lines(err, offset), truncated=overflow)
-    if timed_out:
-        res.error = "timeout"
-        res.stderr = (res.stderr + f"\nTime limit exceeded ({timeout_s:g}s).").strip()
-    elif "error: compilation failed" in err:
-        res.error = "compile"
-        res.stderr = res.stderr.replace("error: compilation failed", "").strip()
-    elif rc != 0 and not overflow:
-        res.error = "runtime"
+            [javac, "-nowarn", "-encoding", "UTF-8", "-d", tmp, "Main.java"], tmp, timeout_s, max_output, env)
+        if timed_out:
+            res.error, res.stderr = "timeout", f"Time limit exceeded ({timeout_s:g}s)."
+        elif rc != 0:
+            res.error, res.stderr = "compile", _remap_lines(err + out, offset).strip()
+        else:
+            remaining = max(1.0, timeout_s - (time.perf_counter() - start))
+            # User code runs under a Security Manager whose policy grants it no file, network or exec rights.
+            cmd = [java, *JVM_FLAGS, "-Djava.security.manager=default",
+                   f"-Djava.security.policy=={policy.as_uri()}", "-cp", tmp, "Main"]
+            rc, out, err, timed_out, overflow = _run_process(cmd, tmp, remaining, max_output, env)
+            res.stdout, res.truncated = out, overflow
+            res.stderr = _remap_lines(_SM_WARNING.sub("", err), offset).strip()
+            if timed_out:
+                res.error = "timeout"
+                res.stderr = (res.stderr + f"\nTime limit exceeded ({timeout_s:g}s).").strip()
+            elif rc != 0 and not overflow:
+                res.error = "runtime"
     res.ms = int((time.perf_counter() - start) * 1000)
     return res
 

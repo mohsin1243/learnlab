@@ -28,7 +28,7 @@
 **Out of scope:** GitHub Pages build, CI workflow, public hosting.
 
 ## Tasks
-- [ ] 1. Allowed hosts: tests (RED) → implement (GREEN)
-- [ ] 2. devcontainer + run.sh + README + constitution amendment
-- [ ] 3. git init + local commit; hand off push commands
-- [ ] verification-before-completion
+- [x] 1. Allowed hosts: tests (RED) → implement (GREEN)
+- [x] 2. devcontainer + run.sh + README + constitution amendment
+- [x] 3. git init + local commit; hand off push commands
+- [x] verification-before-completion

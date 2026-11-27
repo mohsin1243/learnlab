@@ -1,0 +1,16 @@
+{
+  "name": "LearnLab",
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.13-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": { "version": "21", "jdkDistro": "tem" }
+  },
+  "forwardPorts": [8765],
+  "portsAttributes": {
+    "8765": { "label": "LearnLab", "onAutoForward": "openBrowser" }
+  },
+  "postCreateCommand": "python -m venv .venv && .venv/bin/pip install -q -r requirements.txt -r requirements-dev.txt",
+  "postAttachCommand": "bash run.sh",
+  "customizations": {
+    "codespaces": { "openFiles": ["README.md"] }
+  }
+}

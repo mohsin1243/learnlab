@@ -49,7 +49,7 @@ function srcdoc() {
   button{font:inherit;padding:4px 10px;border:1px solid #c9cfda;border-radius:6px;background:#F5F7FA;cursor:pointer}
   button:hover{background:#e9edf3} button:disabled{opacity:.5;cursor:not-allowed}
   input,select,textarea{font:inherit;padding:4px 8px;border:1px solid #c9cfda;border-radius:6px}
-  .done{text-decoration:line-through;color:#6B7280} .active,.selected{outline:2px solid #243782}
+  .done{text-decoration:line-through;color:#6B7280} .active,.selected{outline:2px solid #4f46e5}
 </style>
 <script src="${o}/static/vendor/react.development.js"></script>
 <script src="${o}/static/vendor/react-dom.development.js"></script>

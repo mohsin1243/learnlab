@@ -1,6 +1,6 @@
 # LearnLab Constitution
 
-**Version:** 1.1.0
+**Version:** 1.3.0
 **Status:** Ratified
 **Created:** 2026-11-27
 **Ratification date:** 2026-11-27
@@ -8,7 +8,7 @@
 ## Core Principles
 
 ### I. Local-Only Execution
-**Statement:** User code (JSX, Java, SQL) MUST run only on the user's own machine or the user's own GitHub Codespace. The server MUST bind to `127.0.0.1`. Apart from localhost, it MUST only accept the exact, login-protected Codespaces forwarding host, and MUST reject other hosts and cross-origin requests. The Codespaces port MUST stay private.
+**Statement:** User code (JSX, Java, SQL) MUST run only on the user's own machine or the user's own GitHub Codespace. The server MUST bind to `127.0.0.1`. Apart from localhost, it MUST only accept the exact, login-protected Codespaces forwarding host, and MUST reject other hosts and cross-origin requests. The Codespaces port MAY be made public only while user Java code runs in the sandbox: no file, network or process access and no inherited secrets.
 
 **Rationale:** A local endpoint that runs code is a remote-code-execution risk if any web page can reach it.
 
@@ -40,14 +40,14 @@
 - **Cloud and integration services:** None.
 - **Stakeholders:** The individual learner (the project owner).
 
-## Applied Stellantis Standards
+## Applied Engineering Standards
 
 | Standard | Application |
 |---|---|
 | Security | Localhost-only binding, a session token, Host/Origin checks, and timeouts; `pip-audit` must report no high or critical issues. |
 | Development gates | A build brief and test-first development are required, with at least 80% coverage on the Python backend. |
 | Observability | Structured JSON logs only; user code and output are never logged. |
-| Design system | Stellantis colors and typography, and the official logo PNG. |
+| Design system | LearnLab's own identity: the `static/assets/logo.svg` mark, an indigo/violet/rose palette and the Inter typeface. No third-party brand assets. |
 
 ## Governance
 
@@ -59,3 +59,5 @@ The owner approves amendments, which use semantic versioning. Each build brief m
 |---|---|---|---|
 | 1.0.0 | 2026-11-27 | GitHub Copilot | Initial version |
 | 1.1.0 | 2026-11-27 | GitHub Copilot | Principle I now allows the user's own private Codespace host |
+| 1.2.0 | 2026-11-27 | GitHub Copilot | Public Codespaces port allowed with the sandboxed Java runner |
+| 1.3.0 | 2026-11-27 | GitHub Copilot | Replaced the Stellantis branding with LearnLab's own identity |

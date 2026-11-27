@@ -78,7 +78,7 @@ You build UIs by **composing** small components into bigger ones. Keep component
 Never define a component inside another component — it gets re-created every render and loses its state.
 --- demo
 function Logo() {
-  return <strong style={{ color: "#243782" }}>◆ LearnLab</strong>;
+  return <strong style={{ color: "#4f46e5" }}>◆ LearnLab</strong>;
 }
 function Nav() {
   return (
@@ -164,8 +164,8 @@ function Badge({ label, color = "#6B7280" }) {
 function App() {
   return (
     <div>
-      <Badge label="New" color="#e94e24" />
-      <Badge label="Stable" color="#43aaa0" />
+      <Badge label="New" color="#f43f5e" />
+      <Badge label="Stable" color="#14b8a6" />
       <Badge label="Default" />
     </div>
   );
@@ -602,7 +602,7 @@ Two built-in ways to style:
 <button className={active ? "tab active" : "tab"}>Home</button>
 
 // 2. Inline style objects — camelCase keys, numbers become px
-<div style={{ backgroundColor: "#243782", padding: 12 }} />
+<div style={{ backgroundColor: "#4f46e5", padding: 12 }} />
 ```
 
 Build class strings conditionally with template literals or a helper: `` className={`btn ${primary ? "btn-primary" : ""}`} ``. In real projects you'll also meet CSS Modules, Tailwind, or CSS-in-JS — all end up setting `className` or `style`.
@@ -613,7 +613,7 @@ function App() {
   return (
     <div>
       <style>{`.tab{border:0;padding:6px 12px;margin-right:4px;border-radius:6px;background:#F5F7FA}
-               .tab.active{background:#243782;color:white}`}</style>
+               .tab.active{background:#4f46e5;color:white}`}</style>
       {tabs.map(t => (
         <button key={t} className={t === active ? "tab active" : "tab"} onClick={() => setActive(t)}>{t}</button>
       ))}
@@ -630,7 +630,7 @@ function App() {
   return (
     <div>
       {Object.keys(sizes).map(s => <button key={s} className="opt">{s}</button>)}
-      <div id="box" style={{ height: 20, background: "#43aaa0" }} />
+      <div id="box" style={{ height: 20, background: "#14b8a6" }} />
     </div>
   );
 }
@@ -644,7 +644,7 @@ function App() {
       {Object.keys(sizes).map(s => (
         <button key={s} className={s === size ? "opt selected" : "opt"} onClick={() => setSize(s)}>{s}</button>
       ))}
-      <div id="box" style={{ height: 20, width: sizes[size], background: "#43aaa0" }} />
+      <div id="box" style={{ height: 20, width: sizes[size], background: "#14b8a6" }} />
     </div>
   );
 }
@@ -888,7 +888,7 @@ function App() {
       <button onClick={() => load()}>Reload</button>{" "}
       <button onClick={() => load(true)}>Simulate failure</button>
       {state.status === "loading" && <p>Loading…</p>}
-      {state.status === "error" && <p style={{ color: "#e94e24" }}>Error: {state.error}</p>}
+      {state.status === "error" && <p style={{ color: "#f43f5e" }}>Error: {state.error}</p>}
       {state.status === "ok" && <ul>{state.users.map(u => <li key={u.id}>{u.name}</li>)}</ul>}
     </div>
   );
@@ -1115,7 +1115,7 @@ function Button() {
 const ThemeContext = createContext("light");
 function Panel() {
   const theme = useContext(ThemeContext);
-  const style = theme === "dark" ? { background: "#282b34", color: "white" } : { background: "#F5F7FA" };
+  const style = theme === "dark" ? { background: "#1e1e2e", color: "white" } : { background: "#F5F7FA" };
   return <div style={{ ...style, padding: 12, borderRadius: 8 }}>The theme is <b>{theme}</b></div>;
 }
 function Layout() { return <div><Panel /></div>; }   // no props passed!
@@ -1371,8 +1371,8 @@ function App() {
   });
   return (
     <form onSubmit={e => { e.preventDefault(); setTouched({ email: true, password: true }); }}>
-      <div><input placeholder="email" {...field("email")} /> {touched.email && <small style={{ color: "#e94e24" }}>{errors.email}</small>}</div>
-      <div><input type="password" placeholder="password" {...field("password")} /> {touched.password && <small style={{ color: "#e94e24" }}>{errors.password}</small>}</div>
+      <div><input placeholder="email" {...field("email")} /> {touched.email && <small style={{ color: "#f43f5e" }}>{errors.email}</small>}</div>
+      <div><input type="password" placeholder="password" {...field("password")} /> {touched.password && <small style={{ color: "#f43f5e" }}>{errors.password}</small>}</div>
       <button>Sign up</button> {Object.keys(errors).length === 0 && "✅ valid"}
     </form>
   );
@@ -1599,7 +1599,7 @@ class ErrorBoundary extends Component {
   constructor(p) { super(p); this.state = { error: null }; }
   static getDerivedStateFromError(error) { return { error }; }
   render() {
-    if (this.state.error) return <p style={{ color: "#e94e24" }}>💥 {this.state.error.message} <button onClick={() => this.setState({ error: null })}>retry</button></p>;
+    if (this.state.error) return <p style={{ color: "#f43f5e" }}>💥 {this.state.error.message} <button onClick={() => this.setState({ error: null })}>retry</button></p>;
     return this.props.children;
   }
 }
@@ -2098,12 +2098,12 @@ function withBorder(Component, color) {
   return props => <div style={{ border: `2px solid ${color}`, padding: 6, margin: 4 }}><Component {...props} /></div>;
 }
 const Title = ({ text }) => <h3 style={{ margin: 0 }}>{text}</h3>;
-const BlueTitle = withBorder(Title, "#243782");
+const BlueTitle = withBorder(Title, "#4f46e5");
 function App() {
   return (
     <div>
       <BlueTitle text="Wrapped by a HOC" />
-      <Hover>{h => <p style={{ background: h ? "#a0d4cd" : "#F5F7FA" }}>{h ? "Hovering!" : "Hover me (render prop)"}</p>}</Hover>
+      <Hover>{h => <p style={{ background: h ? "#99f6e4" : "#F5F7FA" }}>{h ? "Hovering!" : "Hover me (render prop)"}</p>}</Hover>
     </div>
   );
 }
@@ -2180,7 +2180,7 @@ function reducer(state, event) {
 Invalid events are simply ignored, so a double-click can't start two fetches. Libraries like **XState** take this further (guards, nested & parallel states, visualisers).
 --- demo
 const lights = { green: { NEXT: "yellow" }, yellow: { NEXT: "red" }, red: { NEXT: "green" } };
-const colors = { green: "#43aaa0", yellow: "#eca935", red: "#e94e24" };
+const colors = { green: "#14b8a6", yellow: "#f59e0b", red: "#f43f5e" };
 function App() {
   const [s, send] = useReducer((st, ev) => lights[st][ev] ?? st, "green");
   return (

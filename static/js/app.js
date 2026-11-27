@@ -32,11 +32,11 @@ async function home() {
     </section>
     <div class="home-grid">
       ${card("#/react", "React", "Learn → Practice. Each lesson explains a concept with an editable live demo, then gives you an exercise with automatic checks.",
-        ["JSX, props, state, events", "Effects, refs, reducers, context", "Suspense, transitions, portals, virtualization"], rs, lessons.length, "#43aaa0")}
+        ["JSX, props, state, events", "Effects, refs, reducers, context", "Suspense, transitions, portals, virtualization"], rs, lessons.length, "#14b8a6")}
       ${card("#/stream", "Java Streams", "Real Java 21 compilation. Your snippet runs against shared sample data and the output is verified.",
-        ["filter / map / reduce / collect", "groupingBy, partitioningBy, toMap", "teeing, custom collectors, windows"], ss, stream.length, "#e94e24")}
+        ["filter / map / reduce / collect", "groupingBy, partitioningBy, toMap", "teeing, custom collectors, windows"], ss, stream.length, "#f43f5e")}
       ${card("#/sql", "SQL", "SQLite engine with an HR + sales schema. Results are compared row-by-row with the reference query.",
-        ["SELECT, WHERE, GROUP BY, HAVING", "JOINs, subqueries, set operators", "Window functions, recursive CTEs, gaps & islands"], qs, sql.length, "#eca935")}
+        ["SELECT, WHERE, GROUP BY, HAVING", "JOINs, subqueries, set operators", "Window functions, recursive CTEs, gaps & islands"], qs, sql.length, "#f59e0b")}
     </div>
     <div class="home-foot">
       <span class="muted small">Shortcuts: <kbd>Ctrl</kbd>+<kbd>Enter</kbd> run · <kbd>Ctrl</kbd>+<kbd>/</kbd> comment · <kbd>Tab</kbd> indent · <kbd>Alt</kbd>+<kbd>←/→</kbd> prev/next question</span>

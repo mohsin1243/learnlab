@@ -34,7 +34,7 @@
     if (!box) {
       box = document.createElement("pre");
       box.id = "__err";
-      box.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;margin:0;padding:10px;background:#fff1ec;color:#b3261e;border:1px solid #F39671;border-radius:6px;font:12px/1.4 Consolas,monospace;white-space:pre-wrap;max-height:45%;overflow:auto;z-index:99999";
+      box.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;margin:0;padding:10px;background:#fff1ec;color:#b3261e;border:1px solid #fda4af;border-radius:6px;font:12px/1.4 Consolas,monospace;white-space:pre-wrap;max-height:45%;overflow:auto;z-index:99999";
       document.body.appendChild(box);
     }
     box.textContent = message;

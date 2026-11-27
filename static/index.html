@@ -24,7 +24,15 @@
     </nav>
     <button id="theme-toggle" class="icon-btn" title="Toggle dark mode" aria-label="Toggle dark mode">◐</button>
   </header>
-  <main id="view" tabindex="-1"></main>
+  <main id="view" tabindex="-1"><div class="loading">Loading…</div></main>
+  <script>
+    setTimeout(function () {
+      if (!window.__learnlabStarted) {
+        document.getElementById("view").innerHTML =
+          '<div class="error pad"><b>The app could not start.</b><pre>The JavaScript files were blocked or failed to load. Reload the page (F5); if it persists, check the server terminal for "request.rejected".</pre></div>';
+      }
+    }, 8000);
+  </script>
   <script type="module" src="/static/js/app.js"></script>
 </body>
 </html>

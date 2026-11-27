@@ -105,8 +105,12 @@ def create_app(data_dir: Path = DATA_DIR, token: str | None = None) -> FastAPI:
     async def guard(request: Request, call_next):
         trace_id = request.headers.get("traceparent", "").split("-")[1:2] or [uuid.uuid4().hex]
         host_ok = _host_name(request.headers.get("host", "")).lower() in hosts
-        if not host_ok or not _origin_ok(request.headers.get("origin"), extra):
-            log.warning("request.rejected", reason="host_or_origin", path=request.url.path, trace_id=trace_id[0])
+        forwarded = _host_name(request.headers.get("x-forwarded-host", "").split(",")[0].strip()).lower()
+        origin_hosts = extra | {forwarded} if forwarded else extra
+        if not host_ok or not _origin_ok(request.headers.get("origin"), origin_hosts):
+            log.warning("request.rejected", reason="host_or_origin", path=request.url.path,
+                        host=request.headers.get("host"), origin=request.headers.get("origin"),
+                        forwarded_host=forwarded or None, trace_id=trace_id[0])
             return JSONResponse({"detail": "Forbidden"}, status_code=403)
         path = request.url.path
         if path.startswith("/api/") and path != "/api/health":

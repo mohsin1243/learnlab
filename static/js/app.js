@@ -72,6 +72,7 @@ function initTheme() {
   };
 }
 
+window.__learnlabStarted = true;
 initTheme();
 window.addEventListener("hashchange", route);
 route();

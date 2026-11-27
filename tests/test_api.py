@@ -88,6 +88,19 @@ def test_codespaces_host_and_https_origin_accepted(monkeypatch, tmp_path):
     assert c.get("/api/bank/sql", headers={**HDRS, "Host": "other-8765.app.github.dev"}).status_code == 403
 
 
+def test_proxied_same_origin_module_request_accepted(client):
+    # Codespaces proxies with Host=localhost and the public origin in X-Forwarded-Host.
+    h = {"Host": "localhost:8765", "X-Forwarded-Host": "cs-8765.app.github.dev",
+         "Origin": "https://cs-8765.app.github.dev"}
+    assert client.get("/static/js/app.js", headers=h).status_code == 200
+    assert client.get("/api/bank/sql", headers={**HDRS, **h}).status_code == 200
+
+
+def test_proxied_foreign_origin_still_rejected(client):
+    h = {"Host": "localhost:8765", "X-Forwarded-Host": "cs-8765.app.github.dev", "Origin": "https://evil.example"}
+    assert client.get("/static/js/app.js", headers=h).status_code == 403
+
+
 def test_health_is_public(client):
     assert client.get("/api/health").json()["status"] == "ok"
 

@@ -101,6 +101,42 @@ def test_proxied_foreign_origin_still_rejected(client):
     assert client.get("/static/js/app.js", headers=h).status_code == 403
 
 
+def test_codespaces_proxy_rewritten_origin_accepted(client):
+    # Exact headers from the Codespaces log: proxy rewrites Origin to https://localhost:PORT.
+    h = {"Host": "localhost:8765", "Origin": "https://localhost:8765",
+         "X-Forwarded-Host": "cuddly-invention-55rj4v9r75g29g6-8765.app.github.dev"}
+    assert client.get("/static/js/app.js", headers=h).status_code == 200
+    assert client.post("/api/run/sql", json={"sql": "SELECT 1"}, headers={**HDRS, **h}).status_code == 200
+
+
+def test_fetch_metadata_same_origin_accepted_behind_any_proxy(client):
+    h = {"Sec-Fetch-Site": "same-origin", "Origin": "https://anything-8765.app.github.dev"}
+    assert client.get("/static/js/app.js", headers=h).status_code == 200
+    r = client.post("/api/run/sql", json={"sql": "SELECT 1"}, headers={**HDRS, **h})
+    assert r.status_code == 200
+
+
+def test_fetch_metadata_cross_site_rejected(client):
+    h = {"Sec-Fetch-Site": "cross-site", "Origin": "https://evil.example"}
+    assert client.get("/static/js/app.js", headers=h).status_code == 403
+
+
+def test_codespaces_forwarding_hosts_accepted(monkeypatch, tmp_path):
+    monkeypatch.setenv("CODESPACES", "true")
+    monkeypatch.delenv("CODESPACE_NAME", raising=False)
+    (tmp_path / "sql.json").write_text('{"questions": []}')
+    c = TestClient(create_app(data_dir=tmp_path, token=TOKEN), base_url="https://x-8765.app.github.dev")
+    assert c.get("/", headers={"Origin": "https://x-8765.app.github.dev"}).status_code == 200
+    assert c.get("/", headers={"Host": "evil.example"}).status_code == 403
+    assert c.get("/", headers={"Host": "x.app.github.dev.evil.example"}).status_code == 403
+
+
+def test_health_reports_version(client):
+    from app import __version__
+
+    assert client.get("/api/health").json() == {"status": "ok", "version": __version__}
+
+
 def test_health_is_public(client):
     assert client.get("/api/health").json()["status"] == "ok"
 

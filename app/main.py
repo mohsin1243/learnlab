@@ -19,6 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
 
+from app import __version__
 from app.java_runner import JavaUnavailable, harness_source, outputs_match, run_java
 from app.sql_runner import compare_rows, run_query, schema_info
 
@@ -69,13 +70,27 @@ def _extra_hosts(port: int) -> set[str]:
     return hosts
 
 
-def _origin_ok(origin: str | None, extra: set[str]) -> bool:
+def _codespaces_domain() -> str | None:
+    """Forwarding domain when running inside GitHub Codespaces (only GitHub controls it)."""
+    if os.environ.get("CODESPACES", "").lower() != "true":
+        return None
+    return os.environ.get("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN", "app.github.dev").lower()
+
+
+def _host_allowed(host: str, allowed: set[str], domain: str | None) -> bool:
+    return host in allowed or bool(domain and host.endswith("." + domain))
+
+
+def _origin_ok(origin: str | None, extra: set[str], domain: str | None = None) -> bool:
     if not origin:
         return True
-    if origin.startswith("http://"):
-        return _host_name(origin[len("http://"):]) in LOCAL_HOSTS
-    if origin.startswith("https://"):
-        return _host_name(origin[len("https://"):]).lower() in extra
+    for scheme in ("http://", "https://"):
+        if origin.startswith(scheme):
+            host = _host_name(origin[len(scheme):]).lower()
+            # The Codespaces proxy rewrites Origin to https://localhost:PORT.
+            if host in LOCAL_HOSTS:
+                return True
+            return scheme == "https://" and _host_allowed(host, extra, domain)
     return False
 
 
@@ -85,6 +100,7 @@ def create_app(data_dir: Path = DATA_DIR, token: str | None = None) -> FastAPI:
     java_slots = threading.BoundedSemaphore(2)
     extra = _extra_hosts(int(os.environ.get("LEARNLAB_PORT", "8765")))
     hosts = LOCAL_HOSTS | extra
+    domain = _codespaces_domain()
 
     @lru_cache(maxsize=4)
     def load_bank(name: str) -> dict[str, Any]:
@@ -104,10 +120,13 @@ def create_app(data_dir: Path = DATA_DIR, token: str | None = None) -> FastAPI:
     @app.middleware("http")
     async def guard(request: Request, call_next):
         trace_id = request.headers.get("traceparent", "").split("-")[1:2] or [uuid.uuid4().hex]
-        host_ok = _host_name(request.headers.get("host", "")).lower() in hosts
+        host_ok = _host_allowed(_host_name(request.headers.get("host", "")).lower(), hosts, domain)
         forwarded = _host_name(request.headers.get("x-forwarded-host", "").split(",")[0].strip()).lower()
         origin_hosts = extra | {forwarded} if forwarded else extra
-        if not host_ok or not _origin_ok(request.headers.get("origin"), origin_hosts):
+        # Fetch Metadata can't be forged by web pages; same-origin requests are safe behind any proxy.
+        same_origin = request.headers.get("sec-fetch-site") in ("same-origin", "none")
+        origin_ok = same_origin or _origin_ok(request.headers.get("origin"), origin_hosts, domain)
+        if not host_ok or not origin_ok:
             log.warning("request.rejected", reason="host_or_origin", path=request.url.path,
                         host=request.headers.get("host"), origin=request.headers.get("origin"),
                         forwarded_host=forwarded or None, trace_id=trace_id[0])
@@ -132,7 +151,7 @@ def create_app(data_dir: Path = DATA_DIR, token: str | None = None) -> FastAPI:
 
     @app.get("/api/health")
     def health() -> dict[str, str]:
-        return {"status": "ok"}
+        return {"status": "ok", "version": __version__}
 
     @app.get("/api/bank/{name}")
     def bank(name: str) -> dict[str, Any]:

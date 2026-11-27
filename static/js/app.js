@@ -32,11 +32,11 @@ async function home() {
     </section>
     <div class="home-grid">
       ${card("#/react", "React", "Learn → Practice. Each lesson explains a concept with an editable live demo, then gives you an exercise with automatic checks.",
-        ["JSX, props, state, events", "Effects, refs, reducers, context", "Suspense, transitions, portals, virtualization"], rs, lessons.length, "#14b8a6")}
+        ["JSX, props, state, events", "Effects, refs, reducers, context", "Suspense, transitions, portals, virtualization"], rs, lessons.length, "var(--primary)")}
       ${card("#/stream", "Java Streams", "Real Java 21 compilation. Your snippet runs against shared sample data and the output is verified.",
-        ["filter / map / reduce / collect", "groupingBy, partitioningBy, toMap", "teeing, custom collectors, windows"], ss, stream.length, "#f43f5e")}
+        ["filter / map / reduce / collect", "groupingBy, partitioningBy, toMap", "teeing, custom collectors, windows"], ss, stream.length, "var(--primary)")}
       ${card("#/sql", "SQL", "SQLite engine with an HR + sales schema. Results are compared row-by-row with the reference query.",
-        ["SELECT, WHERE, GROUP BY, HAVING", "JOINs, subqueries, set operators", "Window functions, recursive CTEs, gaps & islands"], qs, sql.length, "#f59e0b")}
+        ["SELECT, WHERE, GROUP BY, HAVING", "JOINs, subqueries, set operators", "Window functions, recursive CTEs, gaps & islands"], qs, sql.length, "var(--primary)")}
     </div>
     <div class="home-foot">
       <span class="muted small">Shortcuts: <kbd>Ctrl</kbd>+<kbd>Enter</kbd> run · <kbd>Ctrl</kbd>+<kbd>/</kbd> comment · <kbd>Tab</kbd> indent · <kbd>Alt</kbd>+<kbd>←/→</kbd> prev/next question</span>
@@ -64,7 +64,7 @@ async function route() {
 
 function initTheme() {
   const apply = t => { document.documentElement.dataset.theme = t; };
-  apply(store.pref("theme", matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  apply(store.pref("theme", "light"));
   document.getElementById("theme-toggle").onclick = () => {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     store.setPref("theme", next);

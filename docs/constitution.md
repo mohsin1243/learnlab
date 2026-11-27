@@ -47,7 +47,7 @@
 | Security | Localhost-only binding, a session token, Host/Origin checks, and timeouts; `pip-audit` must report no high or critical issues. |
 | Development gates | A build brief and test-first development are required, with at least 80% coverage on the Python backend. |
 | Observability | Structured JSON logs only; user code and output are never logged. |
-| Design system | LearnLab's own identity: the `static/assets/logo.svg` mark, an indigo/violet/rose palette and the Inter typeface. No third-party brand assets. |
+| Design system | LearnLab's own identity: the `static/assets/logo.svg` mark, a single muted sage-teal palette in light tints and the IBM Plex typeface. No third-party brand assets. |
 
 ## Governance
 

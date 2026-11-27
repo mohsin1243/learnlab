@@ -45,11 +45,11 @@ function srcdoc() {
   const o = location.origin;
   return `<!doctype html><html><head><meta charset="utf-8">
 <style>
-  body{font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;margin:12px;color:#1A1A2E;background:#fff}
-  button{font:inherit;padding:4px 10px;border:1px solid #c9cfda;border-radius:6px;background:#F5F7FA;cursor:pointer}
-  button:hover{background:#e9edf3} button:disabled{opacity:.5;cursor:not-allowed}
-  input,select,textarea{font:inherit;padding:4px 8px;border:1px solid #c9cfda;border-radius:6px}
-  .done{text-decoration:line-through;color:#6B7280} .active,.selected{outline:2px solid #4f46e5}
+  body{font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;margin:12px;color:#1f2a29;background:#fff}
+  button{font:inherit;padding:4px 10px;border:1px solid #cfdad7;border-radius:6px;background:#f0f4f3;cursor:pointer}
+  button:hover{background:#e3ece9} button:disabled{opacity:.5;cursor:not-allowed}
+  input,select,textarea{font:inherit;padding:4px 8px;border:1px solid #cfdad7;border-radius:6px}
+  .done{text-decoration:line-through;color:#66736f} .active,.selected{outline:2px solid #2f6f6a}
 </style>
 <script src="${o}/static/vendor/react.development.js"></script>
 <script src="${o}/static/vendor/react-dom.development.js"></script>

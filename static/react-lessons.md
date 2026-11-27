@@ -78,7 +78,7 @@ You build UIs by **composing** small components into bigger ones. Keep component
 Never define a component inside another component — it gets re-created every render and loses its state.
 --- demo
 function Logo() {
-  return <strong style={{ color: "#4f46e5" }}>◆ LearnLab</strong>;
+  return <strong style={{ color: "#2f6f6a" }}>◆ LearnLab</strong>;
 }
 function Nav() {
   return (
@@ -154,7 +154,7 @@ Key facts:
 - Any value can be a prop: strings, numbers (`count={3}`), arrays, objects, functions, even JSX.
 - Spread an object into props with `<Badge {...data} />`.
 --- demo
-function Badge({ label, color = "#6B7280" }) {
+function Badge({ label, color = "#66736f" }) {
   return (
     <span style={{ background: color, color: "white", padding: "2px 8px", borderRadius: 12, marginRight: 6 }}>
       {label}
@@ -164,8 +164,8 @@ function Badge({ label, color = "#6B7280" }) {
 function App() {
   return (
     <div>
-      <Badge label="New" color="#f43f5e" />
-      <Badge label="Stable" color="#14b8a6" />
+      <Badge label="New" color="#a4473e" />
+      <Badge label="Stable" color="#5f9c94" />
       <Badge label="Default" />
     </div>
   );
@@ -225,7 +225,7 @@ This is how you build reusable *layout* components (cards, modals, panels) witho
 --- demo
 function Card({ title, children }) {
   return (
-    <div style={{ border: "1px solid #E2E6ED", borderRadius: 8, padding: 12, marginBottom: 10 }}>
+    <div style={{ border: "1px solid #dde6e3", borderRadius: 8, padding: 12, marginBottom: 10 }}>
       <h3 style={{ marginTop: 0 }}>{title}</h3>
       {children}
     </div>
@@ -602,7 +602,7 @@ Two built-in ways to style:
 <button className={active ? "tab active" : "tab"}>Home</button>
 
 // 2. Inline style objects — camelCase keys, numbers become px
-<div style={{ backgroundColor: "#4f46e5", padding: 12 }} />
+<div style={{ backgroundColor: "#2f6f6a", padding: 12 }} />
 ```
 
 Build class strings conditionally with template literals or a helper: `` className={`btn ${primary ? "btn-primary" : ""}`} ``. In real projects you'll also meet CSS Modules, Tailwind, or CSS-in-JS — all end up setting `className` or `style`.
@@ -612,12 +612,12 @@ function App() {
   const tabs = ["home", "about", "contact"];
   return (
     <div>
-      <style>{`.tab{border:0;padding:6px 12px;margin-right:4px;border-radius:6px;background:#F5F7FA}
-               .tab.active{background:#4f46e5;color:white}`}</style>
+      <style>{`.tab{border:0;padding:6px 12px;margin-right:4px;border-radius:6px;background:#f0f4f3}
+               .tab.active{background:#2f6f6a;color:white}`}</style>
       {tabs.map(t => (
         <button key={t} className={t === active ? "tab active" : "tab"} onClick={() => setActive(t)}>{t}</button>
       ))}
-      <p style={{ color: "#6B7280", fontStyle: "italic" }}>Current tab: {active}</p>
+      <p style={{ color: "#66736f", fontStyle: "italic" }}>Current tab: {active}</p>
     </div>
   );
 }
@@ -630,7 +630,7 @@ function App() {
   return (
     <div>
       {Object.keys(sizes).map(s => <button key={s} className="opt">{s}</button>)}
-      <div id="box" style={{ height: 20, background: "#14b8a6" }} />
+      <div id="box" style={{ height: 20, background: "#5f9c94" }} />
     </div>
   );
 }
@@ -644,7 +644,7 @@ function App() {
       {Object.keys(sizes).map(s => (
         <button key={s} className={s === size ? "opt selected" : "opt"} onClick={() => setSize(s)}>{s}</button>
       ))}
-      <div id="box" style={{ height: 20, width: sizes[size], background: "#14b8a6" }} />
+      <div id="box" style={{ height: 20, width: sizes[size], background: "#5f9c94" }} />
     </div>
   );
 }
@@ -888,7 +888,7 @@ function App() {
       <button onClick={() => load()}>Reload</button>{" "}
       <button onClick={() => load(true)}>Simulate failure</button>
       {state.status === "loading" && <p>Loading…</p>}
-      {state.status === "error" && <p style={{ color: "#f43f5e" }}>Error: {state.error}</p>}
+      {state.status === "error" && <p style={{ color: "#a4473e" }}>Error: {state.error}</p>}
       {state.status === "ok" && <ul>{state.users.map(u => <li key={u.id}>{u.name}</li>)}</ul>}
     </div>
   );
@@ -1115,7 +1115,7 @@ function Button() {
 const ThemeContext = createContext("light");
 function Panel() {
   const theme = useContext(ThemeContext);
-  const style = theme === "dark" ? { background: "#1e1e2e", color: "white" } : { background: "#F5F7FA" };
+  const style = theme === "dark" ? { background: "#1f2a29", color: "white" } : { background: "#f0f4f3" };
   return <div style={{ ...style, padding: 12, borderRadius: 8 }}>The theme is <b>{theme}</b></div>;
 }
 function Layout() { return <div><Panel /></div>; }   // no props passed!
@@ -1371,8 +1371,8 @@ function App() {
   });
   return (
     <form onSubmit={e => { e.preventDefault(); setTouched({ email: true, password: true }); }}>
-      <div><input placeholder="email" {...field("email")} /> {touched.email && <small style={{ color: "#f43f5e" }}>{errors.email}</small>}</div>
-      <div><input type="password" placeholder="password" {...field("password")} /> {touched.password && <small style={{ color: "#f43f5e" }}>{errors.password}</small>}</div>
+      <div><input placeholder="email" {...field("email")} /> {touched.email && <small style={{ color: "#a4473e" }}>{errors.email}</small>}</div>
+      <div><input type="password" placeholder="password" {...field("password")} /> {touched.password && <small style={{ color: "#a4473e" }}>{errors.password}</small>}</div>
       <button>Sign up</button> {Object.keys(errors).length === 0 && "✅ valid"}
     </form>
   );
@@ -1599,7 +1599,7 @@ class ErrorBoundary extends Component {
   constructor(p) { super(p); this.state = { error: null }; }
   static getDerivedStateFromError(error) { return { error }; }
   render() {
-    if (this.state.error) return <p style={{ color: "#f43f5e" }}>💥 {this.state.error.message} <button onClick={() => this.setState({ error: null })}>retry</button></p>;
+    if (this.state.error) return <p style={{ color: "#a4473e" }}>💥 {this.state.error.message} <button onClick={() => this.setState({ error: null })}>retry</button></p>;
     return this.props.children;
   }
 }
@@ -1844,7 +1844,7 @@ function Field({ label, hint }) {
     <div style={{ marginBottom: 8 }}>
       <label htmlFor={id}>{label}</label><br />
       <input id={id} aria-describedby={id + "-hint"} />
-      <div id={id + "-hint"} style={{ fontSize: 12, color: "#6B7280" }}>{hint} (id: {id})</div>
+      <div id={id + "-hint"} style={{ fontSize: 12, color: "#66736f" }}>{hint} (id: {id})</div>
     </div>
   );
 }
@@ -2098,12 +2098,12 @@ function withBorder(Component, color) {
   return props => <div style={{ border: `2px solid ${color}`, padding: 6, margin: 4 }}><Component {...props} /></div>;
 }
 const Title = ({ text }) => <h3 style={{ margin: 0 }}>{text}</h3>;
-const BlueTitle = withBorder(Title, "#4f46e5");
+const BlueTitle = withBorder(Title, "#2f6f6a");
 function App() {
   return (
     <div>
       <BlueTitle text="Wrapped by a HOC" />
-      <Hover>{h => <p style={{ background: h ? "#99f6e4" : "#F5F7FA" }}>{h ? "Hovering!" : "Hover me (render prop)"}</p>}</Hover>
+      <Hover>{h => <p style={{ background: h ? "#d6e6e2" : "#f0f4f3" }}>{h ? "Hovering!" : "Hover me (render prop)"}</p>}</Hover>
     </div>
   );
 }
@@ -2180,7 +2180,7 @@ function reducer(state, event) {
 Invalid events are simply ignored, so a double-click can't start two fetches. Libraries like **XState** take this further (guards, nested & parallel states, visualisers).
 --- demo
 const lights = { green: { NEXT: "yellow" }, yellow: { NEXT: "red" }, red: { NEXT: "green" } };
-const colors = { green: "#14b8a6", yellow: "#f59e0b", red: "#f43f5e" };
+const colors = { green: "#5f9c94", yellow: "#b39a6b", red: "#a4473e" };
 function App() {
   const [s, send] = useReducer((st, ev) => lights[st][ev] ?? st, "green");
   return (
@@ -2340,7 +2340,7 @@ function App() {
   return (
     <div>
       <p>100,000 rows, only {visible.length} in the DOM</p>
-      <div onScroll={e => setTop(e.currentTarget.scrollTop)} style={{ height: H, overflow: "auto", border: "1px solid #E2E6ED" }}>
+      <div onScroll={e => setTop(e.currentTarget.scrollTop)} style={{ height: H, overflow: "auto", border: "1px solid #dde6e3" }}>
         <div style={{ height: data.length * ROW, position: "relative" }}>
           <div style={{ transform: `translateY(${start * ROW}px)` }}>
             {visible.map((r, i) => <div key={start + i} style={{ height: ROW }}>{r}</div>)}

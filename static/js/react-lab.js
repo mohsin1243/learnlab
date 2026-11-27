@@ -207,7 +207,7 @@ export async function renderReact(view, { lessonId, mode }) {
       verdict.hidden = false;
       verdict.className = "verdict " + (passed ? "good" : "bad");
       verdict.innerHTML = passed
-        ? `🎉 All checks passed! ${idx < lessons.length - 1 ? `<a href="#/react/${lessons[idx + 1].id}">Next lesson →</a>` : "You finished the React path!"}`
+        ? `All checks passed. ${idx < lessons.length - 1 ? `<a href="#/react/${lessons[idx + 1].id}">Next lesson →</a>` : "You finished the React path!"}`
         : `${results.filter(r => r.ok).length} / ${results.length} checks passed — keep going or view the answer.`;
       store.setStatus(key(lesson.id), passed ? "solved" : "attempted");
       if (passed) {
